@@ -1,7 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TopBar from '@/components/TopBar.vue'
+</script>
 
 <template>
-  <main>
-    <p>Hello, world</p>
-  </main>
+  <TopBar />
 </template>
