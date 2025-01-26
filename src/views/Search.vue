@@ -4,6 +4,6 @@ import Layout from '@/components/layout/Layout.vue'
 
 <template>
   <Layout>
-    <div>Home</div>
+    <div>Search</div>
   </Layout>
 </template>

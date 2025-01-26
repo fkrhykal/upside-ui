@@ -5,7 +5,7 @@ export default {
     extend: {
       container: {
         center: true,
-        padding: '0.5rem',
+        padding: '0.25rem',
       },
       fontFamily: {
         sans: ['Roboto'],

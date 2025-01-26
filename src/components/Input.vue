@@ -11,3 +11,12 @@ const model = defineModel()
     required
   />
 </template>
+
+<style lang="postcss">
+input[aria-invalid='true'] {
+  @apply focus:ring focus:ring-red-200 focus:outline-none border border-red-300;
+}
+input {
+  @apply focus:ring focus:ring-slate-200 focus:outline-none;
+}
+</style>

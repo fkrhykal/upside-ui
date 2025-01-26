@@ -1,30 +1,26 @@
-import { signIn } from '@/handler/auth/sign-in'
-import { getUserDetail } from '@/handler/users/user-detail'
+import { signIn, type SignInData, type SignInError } from '@/handler/auth/sign-in'
+import type { Failure, Success } from '@/handler/types'
 import { COOKIE } from '@/helpers/cookie'
 import cookie from 'js-cookie'
-import { jwtDecode } from 'jwt-decode'
 import { defineStore } from 'pinia'
 
-interface AuthState {
+type AuthState = {
   credential: Credential | null
 }
 
-interface User {
+type User = {
   id: string
   username: string
 }
 
-interface Credential {
+type Credential = {
   token: string
   user: User
 }
 
-interface JwtPayload {
-  iss: 'upside'
-  exp: number
-  userCredential: {
-    id: string
-  }
+type SignInOption = {
+  onSuccess: (success: Success<SignInData>) => Promise<void>
+  onFailure: (failure: Failure<SignInError>) => Promise<void>
 }
 
 export const useAuth = defineStore('auth', {
@@ -39,32 +35,23 @@ export const useAuth = defineStore('auth', {
     }
   },
   actions: {
-    async signIn(username: string, password: string) {
-      const signInResult = await signIn({ username, password })
-      if (!signInResult.success) {
-        return
+    async signIn(username: string, password: string, { onFailure, onSuccess }: SignInOption) {
+      const result = await signIn({ username, password })
+      if (!result.success) {
+        return onFailure(result)
       }
-      const { token } = signInResult.data
-      cookie.set(COOKIE.AUTH_TOKEN, token)
-
-      const { userCredential } = jwtDecode<JwtPayload>(token)
-      const userDetailResult = await getUserDetail(userCredential.id)
-      if (!userDetailResult.success) {
-        return
-      }
-
-      this.credential = {
-        token,
-        user: {
-          id: userDetailResult.data.id,
-          username: userDetailResult.data.username,
-        },
-      }
-      const base64Credential = btoa(JSON.stringify(this.credential))
-      cookie.set(COOKIE.CREDENTIAL, base64Credential)
+      cookie.set(COOKIE.AUTH_TOKEN, result.data.token, {
+        sameSite: 'strict',
+      })
+      cookie.set(COOKIE.CREDENTIAL, btoa(JSON.stringify(result.data)), {
+        sameSite: 'strict',
+      })
+      this.credential = result.data
+      onSuccess(result)
     },
     async signOut() {
       cookie.remove(COOKIE.AUTH_TOKEN)
+      this.credential = null
     },
   },
 })

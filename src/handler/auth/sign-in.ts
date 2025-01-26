@@ -1,15 +1,13 @@
-import type { Failure, Handler, Success } from '../types'
+import type { Data, Error, Handler } from '../types'
 
 export type SignInPayload = {
   username: string
   password: string
 }
 
-export type SignInData = {
-  token: string
-}
+export type SignInData = Data<200, { token: string; user: { id: string; username: string } }>
 
-export type SignInError = string
+export type SignInError = Error<401 | 500, string>
 
 export const signIn: Handler<SignInPayload, SignInData, SignInError> = async (data) => {
   const response = await fetch(import.meta.env.VITE_API_URL + '/auth/_sign-in', {
@@ -21,17 +19,14 @@ export const signIn: Handler<SignInPayload, SignInData, SignInError> = async (da
   })
 
   if (response.ok) {
-    const success = (await response.json()) as Success<SignInData>
-    console.log({ success })
+    const success = (await response.json()) as SignInData
     return {
       success: true,
       code: success.code,
       data: success.data,
     }
   }
-
-  const failure = (await response.json()) as Failure<SignInError>
-
+  const failure = (await response.json()) as SignInError
   return {
     success: false,
     code: failure.code,

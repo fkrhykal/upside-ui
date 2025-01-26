@@ -7,16 +7,18 @@ const auth = useAuth()
 </script>
 
 <template>
-  <div class="border-b">
+  <div class="fixed top-0 w-full bg-white border-b h-fit">
     <div class="navbar">
       <div>
         <UpsideIcon class="h-10" />
       </div>
-
       <div>
-        <div v-if="auth.credential">
-          <div class="avatar">
-            {{ auth.credential.user.username.charAt(0).toUpperCase() }}
+        <div
+          v-if="auth.credential"
+          class="grid font-semibold border rounded-full size-12 bg-slate-200 place-items-center"
+        >
+          <div class="capitalize">
+            {{ auth.credential.user.username.charAt(0) }}
           </div>
         </div>
         <RouterLink to="sign-in" v-else>
@@ -29,7 +31,7 @@ const auth = useAuth()
 
 <style lang="postcss" scoped>
 .navbar {
-  @apply container flex justify-between py-2 items-center;
+  @apply flex py-2 px-4 items-center justify-between;
 }
 
 .avatar {

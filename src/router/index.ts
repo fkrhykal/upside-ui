@@ -9,6 +9,21 @@ const router = createRouter({
       component: () => import('../views/Home.vue'),
     },
     {
+      path: '/activity',
+      name: 'activity',
+      component: () => import('../views/Activity.vue'),
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('../views/Search.vue'),
+    },
+    {
+      path: '/sides',
+      name: 'sides',
+      component: () => import('../views/Sides.vue'),
+    },
+    {
       path: '/sign-in',
       name: 'sign-in',
       component: () => import('../views/SignIn.vue'),

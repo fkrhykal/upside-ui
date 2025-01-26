@@ -1,15 +1,35 @@
-export interface Success<T> {
+export type Success<T extends HasCode> = {
   success: true
-  code: number
-  data: T
+} & T
+
+export type HasCode = {
+  code: StatusCode
 }
 
-export interface Failure<T> {
+export type Failure<T extends HasCode> = {
   success: false
-  code: number
-  error: T
+} & T
+
+export type Data<C extends StatusCode, D> = {
+  code: C
+  data: D
 }
 
-export type Result<D, E> = Success<D> | Failure<E>
+export type Error<C extends StatusCode, D> = {
+  code: C
+  error: D
+}
 
-export type Handler<T, D, E> = (data: T) => Promise<Result<D, E>>
+export type Result<D extends HasCode, E extends HasCode> = Success<D> | Failure<E>
+
+export type Handler<T, D extends HasCode, E extends HasCode> = (data: T) => Promise<Result<D, E>>
+
+export const status = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  INTERNAL_SERVER_ERROR: 500,
+  UNAUTHORIZED: 401,
+} as const
+
+export type StatusCode = (typeof status)[keyof typeof status]
