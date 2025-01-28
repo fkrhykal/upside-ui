@@ -7,7 +7,7 @@ import TopBar from '../TopBar.vue'
   <main class="relative grid bg-slate-50">
     <TopBar />
 
-    <div class="mt-[4rem]">
+    <div class="mt-[3.5rem]">
       <slot />
     </div>
 

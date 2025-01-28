@@ -1,4 +1,4 @@
-import { status, type Failure, type Handler, type Success } from '@/handler/types'
+import { status, type Failure, type Handler, type HasCode, type Success } from '@/handler/types'
 import { reactive, type Reactive } from 'vue'
 
 export type Form<T extends Payload> = T & {
@@ -20,14 +20,23 @@ export type ValidationError<T extends Payload> = Partial<{ [K in keyof T]: strin
 
 export type Validator<T extends Payload> = (value: T) => Promise<ValidationError<T>>
 
-export type FormFunction<T extends Payload, D, E> = Handler<T, D, E>
+export type FormFunction<T extends Payload, D extends HasCode, E extends HasCode> = Handler<T, D, E>
 
-export function useForm<T extends Payload, D, E>(
+export type FormData<T> = { data: T } & HasCode
+export type FormError<T> = { error: T } & HasCode
+
+export function useForm<
+  T extends Payload,
+  D,
+  Data extends FormData<D>,
+  E,
+  Error extends FormError<E>,
+>(
   value: T,
   opt: {
-    formFn: FormFunction<T, D, E>
-    onSuccess?: (success: Success<D>) => Promise<void>
-    onFailure?: (failure: Failure<E>) => Promise<void>
+    formFn: FormFunction<T, Data, Error>
+    onSuccess?: (success: Success<Data>) => Promise<void>
+    onFailure?: (failure: Failure<Error>) => Promise<void>
     validator?: Validator<T>
   },
 ) {
@@ -72,9 +81,9 @@ export function useForm<T extends Payload, D, E>(
       }
       this.processing = false
       if (result.code === status.BAD_REQUEST) {
-        const error = result.error as { [key: string]: string }
-        for (const key in error) {
-          this.setError(key, error[key])
+        const validationErrorDetail = result.error as { [key: string]: string }
+        for (const fieldName in validationErrorDetail) {
+          this.setError(fieldName, validationErrorDetail[fieldName])
         }
         return
       }

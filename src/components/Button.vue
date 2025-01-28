@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 withDefaults(
   defineProps<{
-    variant?: 'primary' | 'secondary'
+    variant?: 'primary' | 'secondary' | 'ghost'
   }>(),
   {
     variant: 'primary',
@@ -14,6 +14,7 @@ withDefaults(
     :class="{
       'bg-slate-900 hover:bg-slate-900/80 text-white': variant === 'primary',
       'text-slate-900 bg-slate-200 hover:bg-slate-300': variant === 'secondary',
+      'text-slate-900 bg-none hover:bg-slate-100 hover:shadow-sm shadow-none': variant === 'ghost',
     }"
   >
     <slot />
