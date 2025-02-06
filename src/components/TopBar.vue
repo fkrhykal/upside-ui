@@ -7,11 +7,12 @@ const auth = useAuth()
 </script>
 
 <template>
-  <div class="fixed top-0 w-full bg-white border-b h-fit">
+  <div class="sticky top-0 w-full bg-white border-b h-fit">
     <div class="navbar">
       <div>
         <UpsideIcon class="h-10" />
       </div>
+
       <div>
         <div
           v-if="auth.credential"

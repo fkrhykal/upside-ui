@@ -27,8 +27,9 @@ import { RouterLink } from 'vue-router'
 
 <style lang="postcss" scoped>
 nav {
-  @apply fixed w-full bottom-2 md:bottom-[15%] lg:bottom-[25%];
+  @apply fixed w-full md:w-min h-min bottom-2 md:bottom-[15%] lg:bottom-[25%];
 }
+
 nav > div {
   @apply mx-4 flex items-center justify-between h-fit  border rounded-md shadow-sm bg-white
   md:flex-col md:w-fit md:min-h-[24rem] md:my-auto md:self-start;

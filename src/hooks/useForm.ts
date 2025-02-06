@@ -4,10 +4,11 @@ import { reactive, type Reactive } from 'vue'
 export type Form<T extends Payload> = T & {
   processing: boolean
   submit: () => Promise<void>
-  errors: Partial<Record<keyof T | string, string | undefined>>
+  errors: Partial<{ [K in keyof T]: string | undefined }>
   data: () => T
-  setError: (key: keyof T | string, error: string) => void
-  clearError: (key: keyof T | string) => void
+  setError: (key: string & keyof T, error: string) => void
+  clearError: (key: string & keyof T) => void
+  reset: () => void
 }
 
 export type ReactiveForm<T extends Payload> = Reactive<Form<T>>
@@ -16,7 +17,7 @@ export type Field = string | number | boolean | Field[]
 
 export type Payload = { [key: string]: Field }
 
-export type ValidationError<T extends Payload> = Partial<{ [K in keyof T]: string | undefined }>
+export type ValidationError<T extends Payload> = Partial<{ [K in keyof T]: string }>
 
 export type Validator<T extends Payload> = (value: T) => Promise<ValidationError<T>>
 
@@ -41,6 +42,7 @@ export function useForm<
   },
 ) {
   const keys = Object.keys(value) as Array<keyof T>
+  const initialData = value
   const form = reactive<Form<T>>({
     ...value,
     processing: false,
@@ -53,11 +55,11 @@ export function useForm<
       }, {} as T)
     },
 
-    setError(key: keyof T | string, error: string) {
+    setError(key: string & keyof T, error: string) {
       this.errors[key] = error
     },
 
-    clearError(key: keyof T | string) {
+    clearError(key: string & keyof T) {
       this.errors[key] = undefined
     },
 
@@ -90,6 +92,11 @@ export function useForm<
       if (opt.onFailure) {
         await opt.onFailure(result)
       }
+    },
+
+    reset() {
+      keys.forEach((key, _) => ((this as Record<keyof T, Field>)[key] = initialData[key]))
+      this.errors = {}
     },
   })
 

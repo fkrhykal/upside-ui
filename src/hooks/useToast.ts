@@ -23,6 +23,11 @@ export function useToast(): Toast {
       this.payload = payload
       this._showed = true
     },
+    success(payload) {
+      this.type = toastType.SUCCESS
+      this.payload = payload
+      this._showed = true
+    },
     hide() {
       this._showed = false
     },
@@ -34,6 +39,7 @@ export const toastType = {
   INFO: 'info',
   ERROR: 'error',
   WARNING: 'warning',
+  SUCCESS: 'success',
 } as const
 
 export type ToastType = (typeof toastType)[keyof typeof toastType]
@@ -51,4 +57,5 @@ export type Toast = {
   error: (payload: ToastPayload) => void
   info: (payload: ToastPayload) => void
   warn: (payload: ToastPayload) => void
+  success: (payload: ToastPayload) => void
 }

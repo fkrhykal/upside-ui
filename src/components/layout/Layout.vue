@@ -4,13 +4,11 @@ import TopBar from '../TopBar.vue'
 </script>
 
 <template>
-  <main class="relative grid bg-slate-50">
+  <main class="relative grid">
     <TopBar />
-
-    <div class="mt-[3.5rem]">
+    <div>
       <slot />
     </div>
-
     <Navbar />
   </main>
 </template>

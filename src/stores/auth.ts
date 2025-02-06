@@ -1,22 +1,9 @@
 import { signIn, type SignInData, type SignInError } from '@/handler/auth/sign-in'
 import type { Failure, Success } from '@/handler/types'
 import { COOKIE } from '@/helpers/cookie'
+import type { AuthState, Credential } from '@/helpers/credential'
 import cookie from 'js-cookie'
 import { defineStore } from 'pinia'
-
-type AuthState = {
-  credential: Credential | null
-}
-
-type User = {
-  id: string
-  username: string
-}
-
-type Credential = {
-  token: string
-  user: User
-}
 
 type SignInOption = {
   onSuccess: (success: Success<SignInData>) => Promise<void>

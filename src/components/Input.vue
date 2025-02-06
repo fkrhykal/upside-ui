@@ -1,9 +1,21 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
+
 const model = defineModel()
+const input = useTemplateRef<HTMLInputElement>('inputRef')
+
+const focus = () => {
+  input.value?.focus()
+}
+
+defineExpose({
+  focus,
+})
 </script>
 
 <template>
   <input
+    ref="inputRef"
     class="w-full px-2 py-2 border border-gray-300 rounded-md shadow-sm"
     v-model="model"
     type="text"
