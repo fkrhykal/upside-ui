@@ -79,6 +79,7 @@ export function useForm<
         if (opt.onSuccess) {
           await opt.onSuccess(result)
         }
+
         return
       }
       this.processing = false
