@@ -33,3 +33,9 @@ export const status = {
 } as const
 
 export type StatusCode = (typeof status)[keyof typeof status]
+
+export type OffsetMetadata = {
+  page: number
+  perPage: number
+  totalPage: number
+}

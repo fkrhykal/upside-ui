@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { getJoinedSideHandler } from '@/handler/sides/joined-sides'
+import { getPopularSideHandler } from '@/handler/sides/popular-sides'
 import type { Credential } from '@/helpers/credential'
 import { useQuery } from '@/hooks/useQuery'
 import SideItem from './SideItem.vue'
 
-const props = defineProps<{ credential: Credential }>()
+const props = defineProps<{ credential?: Credential }>()
 
 const { data } = useQuery({
-  queryKey: 'joinedSides',
-  queryFn: getJoinedSideHandler(props.credential),
+  queryKey: 'popularSides',
+  queryFn: getPopularSideHandler(props.credential),
 })
 </script>
 

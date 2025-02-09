@@ -14,7 +14,7 @@ export const useAuth = defineStore('auth', {
   state: (): AuthState => {
     const base64Credential = cookie.get(COOKIE.CREDENTIAL)
     if (!base64Credential) {
-      return { credential: null }
+      return { credential: undefined }
     }
     const credential = atob(base64Credential)
     return {
@@ -29,16 +29,19 @@ export const useAuth = defineStore('auth', {
       }
       cookie.set(COOKIE.AUTH_TOKEN, result.data.token, {
         sameSite: 'strict',
+        expires: 7,
       })
       cookie.set(COOKIE.CREDENTIAL, btoa(JSON.stringify(result.data)), {
         sameSite: 'strict',
+        expires: 7,
       })
       this.credential = result.data
       onSuccess(result)
     },
     async signOut() {
       cookie.remove(COOKIE.AUTH_TOKEN)
-      this.credential = null
+      cookie.remove(COOKIE.CREDENTIAL)
+      this.credential = undefined
     },
   },
 })

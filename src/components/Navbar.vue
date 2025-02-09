@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { HeartIcon, HomeIcon, PlusIcon, SearchIcon, UserIcon } from 'lucide-vue-next'
+import { HeartIcon, HomeIcon, PlusIcon, SearchIcon, UsersIcon } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 </script>
 
@@ -19,7 +19,7 @@ import { RouterLink } from 'vue-router'
         <HeartIcon />
       </RouterLink>
       <RouterLink to="sides" activeClass="bg-slate-950 text-white hover:bg-slate-800">
-        <UserIcon />
+        <UsersIcon />
       </RouterLink>
     </div>
   </nav>

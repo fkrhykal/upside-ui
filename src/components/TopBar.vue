@@ -2,26 +2,20 @@
 import Button from '@/components/Button.vue'
 import UpsideIcon from '@/icons/UpsideIcon.vue'
 import { useAuth } from '@/stores/auth'
+import Avatar from './Avatar.vue'
 
 const auth = useAuth()
 </script>
 
 <template>
-  <div class="sticky top-0 w-full bg-white border-b h-fit">
+  <div class="sticky top-0 z-50 w-full bg-white border-b h-fit">
     <div class="navbar">
       <div>
         <UpsideIcon class="h-10" />
       </div>
 
       <div>
-        <div
-          v-if="auth.credential"
-          class="grid font-semibold border rounded-full size-12 bg-slate-200 place-items-center"
-        >
-          <div class="capitalize">
-            {{ auth.credential.user.username.charAt(0) }}
-          </div>
-        </div>
+        <Avatar v-if="auth.credential" :user="auth.credential.user" />
         <RouterLink to="sign-in" v-else>
           <Button variant="secondary"> Sign in </Button>
         </RouterLink>

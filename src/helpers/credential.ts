@@ -1,5 +1,5 @@
 export type AuthState = {
-  credential: Credential | null
+  credential: Credential | undefined
 }
 
 export type User = {

@@ -6,9 +6,7 @@ import TopBar from '../TopBar.vue'
 <template>
   <main class="relative grid">
     <TopBar />
-    <div>
-      <slot />
-    </div>
+    <slot />
     <Navbar />
   </main>
 </template>

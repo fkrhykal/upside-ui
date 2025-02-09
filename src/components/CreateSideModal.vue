@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { createSide } from '@/handler/sides/create_sides'
+import { createSide } from '@/handler/sides/create-sides'
 import type { Credential } from '@/helpers/credential'
 import { useForm } from '@/hooks/useForm'
+import { useQueryClient } from '@/hooks/useQuery'
 import { useToast } from '@/hooks/useToast'
 import { Loader2Icon } from 'lucide-vue-next'
 import { nextTick, ref, Transition, useTemplateRef } from 'vue'
@@ -18,6 +19,7 @@ const nickInput = useTemplateRef<ComponentExposed<typeof Input>>('nickInputRef')
 const toast = useToast()
 
 const props = defineProps<{ credential: Credential }>()
+const queryClient = useQueryClient()
 
 const open = () => {
   isOpen.value = true
@@ -48,6 +50,7 @@ const createSideForm = useForm(
     async onSuccess() {
       close()
       toast.success({ title: 'Side created successfully' })
+      await queryClient.reset(['joinedSides', 'popularSides'])
     },
   },
 )

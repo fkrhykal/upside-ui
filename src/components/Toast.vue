@@ -3,7 +3,7 @@ import { toastType, type Toast } from '@/hooks/useToast'
 import { AlertCircleIcon, CheckIcon } from 'lucide-vue-next'
 import { watch } from 'vue'
 
-const props = withDefaults(defineProps<{ toast: Toast; duration?: number }>(), { duration: 1_500 })
+const props = withDefaults(defineProps<{ toast: Toast; duration?: number }>(), { duration: 5000 })
 
 watch(props.toast, (_, current) => {
   if (current.showed()) {

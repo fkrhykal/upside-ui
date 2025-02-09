@@ -1,7 +1,7 @@
 import type { Credential } from '@/helpers/credential'
-import type { Data, Error, Handler } from '../types'
+import type { Data, Error, Handler, OffsetMetadata } from '../types'
 
-type Side = {
+export type Side = {
   id: string
   nick: string
   name: string
@@ -11,7 +11,7 @@ type Side = {
   }
 }
 
-type JoinedSidesData = Data<200, Side[]>
+type JoinedSidesData = Data<200, { sides: Side[]; metadata: OffsetMetadata }>
 
 type JoinedSidesError = Error<500, string>
 
@@ -20,7 +20,7 @@ export const getJoinedSideHandler: (
 ) => Handler<void, JoinedSidesData, JoinedSidesError> =
   ({ token }) =>
   async () => {
-    const url = new URL('/sides', import.meta.env.VITE_API_URL)
+    const url = new URL(import.meta.env.VITE_API_URL + '/sides')
     url.searchParams.append('filter', 'joined')
     const response = await fetch(url, {
       headers: {
