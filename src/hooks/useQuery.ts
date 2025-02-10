@@ -14,6 +14,8 @@ export type QueryError<E> = { error: E } & HasCode
 export type QueryOptions<D, E> = {
   queryKey: QueryKey
   queryFn: Handler<void, QueryData<D>, QueryError<E>>
+  onSuccess?: (success: QueryData<D>) => void | Promise<void>
+  onFailure?: (failure: QueryError<E>) => void | Promise<void>
 }
 export type QueryClient = ReturnType<typeof useQueryClient>
 
@@ -23,19 +25,27 @@ export function useQuery<D, E>(opt: QueryOptions<D, E>) {
   const queryStore = useQueryStore()
   const data = ref<D>()
   const isLoading = ref(false)
+  const isSuccess = ref(false)
   const processQuery: ProcessQueryFn = async () => {
     isLoading.value = true
     const result = await opt.queryFn()
     if (result.success) {
       data.value = result.data
+      isSuccess.value = true
+      if (opt.onSuccess) {
+        opt.onSuccess(result)
+      }
     }
     isLoading.value = false
+    if (opt.onFailure) {
+      opt.onFailure(result as QueryError<E>)
+    }
   }
 
   queryStore.set(opt.queryKey, processQuery)
   onMounted(processQuery)
 
-  return { data, isLoading }
+  return { data, isLoading, isSuccess }
 }
 
 export function useQueryClient() {

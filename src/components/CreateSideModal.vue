@@ -61,7 +61,7 @@ const createSideForm = useForm(
     <slot />
   </div>
   <Toast :toast />
-  <Modal v-if="isOpen">
+  <Modal :show="isOpen">
     <div
       class="w-full h-full sm:h-fit py-10 px-12 bg-white rounded-md shadow-sm max-w-[28rem] transition-transform"
     >

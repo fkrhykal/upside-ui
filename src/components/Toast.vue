@@ -17,7 +17,7 @@ watch(props.toast, (_, current) => {
 <template>
   <div
     @click="toast.hide()"
-    class="fixed min-h-[6rem] flex z-[99999] justify-between border rounded-md shadow min-w-[32rem] bottom-4 right-4 overflow-hidden transition-all duration-300 place-items-center cursor-pointer"
+    class="bg-white fixed min-h-[6rem] flex z-50 justify-between border rounded-md shadow min-w-[32rem] bottom-4 right-4 overflow-hidden transition-all duration-300 place-items-center cursor-pointer"
     :class="{
       'translate-y-[150%]': !toast.showed(),
       'translate-y-0': toast.showed(),
@@ -28,7 +28,7 @@ watch(props.toast, (_, current) => {
         <div
           class="p-2 rounded-md"
           :class="{
-            'bg-red-200/90 bg-white': toast.type === toastType.ERROR,
+            'bg-red-200/90 ': toast.type === toastType.ERROR,
             'bg-yellow-200/90': toast.type === toastType.WARNING,
             'bg-blue-200/90': toast.type === toastType.INFO,
             'bg-green-200/90 text-white': toast.type === toastType.SUCCESS,

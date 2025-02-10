@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { useAuth } from '@/stores/auth'
 import { HeartIcon, HomeIcon, PlusIcon, SearchIcon, UsersIcon } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
+import CreatePostModal from './CreatePostModal.vue'
+
+const auth = useAuth()
 </script>
 
 <template>
@@ -12,9 +16,11 @@ import { RouterLink } from 'vue-router'
       <RouterLink to="search" activeClass="bg-slate-950 text-white hover:bg-slate-800">
         <SearchIcon />
       </RouterLink>
-      <button class="p-2 rounded-md bg-slate-200">
-        <PlusIcon class="size-6" />
-      </button>
+      <CreatePostModal v-if="auth.credential" :credential="auth.credential">
+        <button class="p-2 rounded-md bg-slate-200">
+          <PlusIcon class="size-6" />
+        </button>
+      </CreatePostModal>
       <RouterLink to="activity" activeClass="bg-slate-950 text-white hover:bg-slate-800">
         <HeartIcon />
       </RouterLink>

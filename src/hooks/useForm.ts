@@ -1,5 +1,5 @@
 import { status, type Failure, type Handler, type HasCode, type Success } from '@/handler/types'
-import { reactive, type Reactive } from 'vue'
+import { nextTick, reactive, type Reactive } from 'vue'
 
 export type Form<T extends Payload> = T & {
   processing: boolean
@@ -96,8 +96,10 @@ export function useForm<
     },
 
     reset() {
-      keys.forEach((key, _) => ((this as Record<keyof T, Field>)[key] = initialData[key]))
-      this.errors = {}
+      nextTick(() => {
+        keys.forEach((key, _) => ((this as Record<keyof T, Field>)[key] = initialData[key]))
+        this.errors = {}
+      })
     },
   })
 

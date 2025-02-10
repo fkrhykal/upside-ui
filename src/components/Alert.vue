@@ -28,7 +28,7 @@ useClickOutside(modal, () => {
   <div @click="isOpen = true" ref="modalRef">
     <slot />
   </div>
-  <Modal v-if="isOpen">
+  <Modal :show="isOpen">
     <div
       class="w-full sm:h-fit p-6 pt-12 bg-white rounded-md shadow-sm max-w-[24rem] transition-transform"
     >
