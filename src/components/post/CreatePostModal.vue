@@ -2,17 +2,19 @@
 import { createPostHandler } from '@/handler/post/create-post'
 import type { Credential } from '@/helpers/credential'
 import { useForm } from '@/hooks/useForm'
+import { useQueryClient } from '@/hooks/useQuery'
 import { useToast } from '@/hooks/useToast'
 import { ref } from 'vue'
-import Button from './Button.vue'
-import Error from './Error.vue'
-import Modal from './Modal.vue'
-import SelectJoinedSides from './SelectJoinedSides.vue'
-import Toast from './Toast.vue'
+import Button from '../Button.vue'
+import Error from '../Error.vue'
+import Modal from '../Modal.vue'
+import SelectJoinedSides from '../SelectJoinedSides.vue'
+import Toast from '../Toast.vue'
 
 const props = defineProps<{ credential: Credential }>()
-const isOpen = ref(true)
+const isOpen = ref(false)
 const toast = useToast()
+const queryClient = useQueryClient()
 
 const createPostForm = useForm(
   { body: '', sideId: '' },
@@ -21,6 +23,7 @@ const createPostForm = useForm(
     onSuccess: async () => {
       isOpen.value = false
       createPostForm.reset()
+      queryClient.reset(['latestPost', 'subscribedPosts'])
     },
   },
 )

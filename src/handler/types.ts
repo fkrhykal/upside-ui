@@ -39,3 +39,8 @@ export type OffsetMetadata = {
   perPage: number
   totalPage: number
 }
+
+export type CursorMetadata = {
+  next: string | null
+  previous: string | null
+}
