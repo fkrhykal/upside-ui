@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Post } from '@/handler/post'
 import { since } from '@/helpers/time'
+import Vote from './Vote.vue'
 
 defineProps<{ post: Post }>()
 </script>
@@ -24,5 +25,14 @@ defineProps<{ post: Post }>()
       </div>
     </div>
     <div class="p-4">{{ post.body }}</div>
+
+    <div>
+      <Vote
+        :score="post.score"
+        :current-user-vote="post.currentUserVote"
+        :membership-detail="post.side.membershipDetail"
+        :id="post.id"
+      />
+    </div>
   </div>
 </template>

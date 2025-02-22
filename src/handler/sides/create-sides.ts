@@ -1,3 +1,4 @@
+import api from '@/helpers/api'
 import type { Credential } from '@/helpers/credential'
 import type { Data, Error, Failure, Handler } from '../types'
 
@@ -15,8 +16,7 @@ export const createSide: (
   credential: Credential,
 ) => Handler<CreateSidePayload, CreateSideData, CreateSideError> =
   (credential) => async (payload) => {
-    const url = new URL('/sides', import.meta.env.VITE_API_URL)
-    const response = await fetch(url, {
+    const response = await fetch(api('/sides'), {
       body: JSON.stringify(payload),
       method: 'POST',
       headers: {

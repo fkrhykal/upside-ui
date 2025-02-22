@@ -2,7 +2,7 @@
 import { getJoinedSideHandler, type Side } from '@/handler/sides/joined-sides'
 import type { Credential } from '@/helpers/credential'
 import { useQuery } from '@/hooks/useQuery'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 const props = defineProps<{ credential: Credential }>()
 
@@ -11,15 +11,19 @@ const isOpen = ref(false)
 const model = defineModel<string>()
 
 const selectedSide = ref<Side>()
+const args = reactive({
+  credential: props.credential,
+})
 
 const { data } = useQuery({
   queryKey: 'joinedSides',
-  queryFn: getJoinedSideHandler(props.credential),
+  queryFn: getJoinedSideHandler,
   onSuccess: ({ data: { sides } }) => {
     const firstSide = sides[0]
     model.value = firstSide.id
     selectedSide.value = firstSide
   },
+  reactiveArgs: args,
 })
 
 const selectSide = (side: Side) => {

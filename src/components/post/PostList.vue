@@ -10,7 +10,6 @@ defineProps<{ posts: Post[] }>()
     <ul class="flex flex-col gap-y-2">
       <li v-for="(post, i) in posts" :key="post.id">
         <div class="flex w-full gap-x-1">
-          <div></div>
           <PostItem class="w-full" :post />
         </div>
       </li>

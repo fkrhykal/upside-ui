@@ -2,13 +2,17 @@
 import { getJoinedSideHandler } from '@/handler/sides/joined-sides'
 import type { Credential } from '@/helpers/credential'
 import { useQuery } from '@/hooks/useQuery'
+import { reactive } from 'vue'
 import SideItem from './SideItem.vue'
 
 const props = defineProps<{ credential: Credential }>()
 
+const args = reactive({ credential: props.credential })
+
 const { data } = useQuery({
   queryKey: 'joinedSides',
-  queryFn: getJoinedSideHandler(props.credential),
+  queryFn: getJoinedSideHandler,
+  reactiveArgs: args,
 })
 </script>
 

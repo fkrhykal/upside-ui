@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useAuth } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import { HeartIcon, HomeIcon, PlusIcon, SearchIcon, UsersIcon } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import CreatePostModal from './post/CreatePostModal.vue'
 
-const auth = useAuth()
+const auth = useAuthStore()
 </script>
 
 <template>

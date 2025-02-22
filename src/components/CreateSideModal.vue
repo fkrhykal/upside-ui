@@ -50,7 +50,7 @@ const createSideForm = useForm(
     async onSuccess() {
       close()
       toast.success({ title: 'Side created successfully' })
-      await queryClient.reset(['joinedSides', 'popularSides'])
+      await queryClient.refetch(['joinedSides', 'popularSides'])
     },
   },
 )

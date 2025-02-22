@@ -10,7 +10,7 @@ type SignInOption = {
   onFailure: (failure: Failure<SignInError>) => Promise<void>
 }
 
-export const useAuth = defineStore('auth', {
+export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
     const base64Credential = cookie.get(COOKIE.CREDENTIAL)
     if (!base64Credential) {

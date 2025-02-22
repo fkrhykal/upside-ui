@@ -13,11 +13,11 @@ import CreateSideModal from '@/components/CreateSideModal.vue'
 import JoinedSideList from '@/components/JoinedSideList.vue'
 import Layout from '@/components/layout/Layout.vue'
 import PopularSideList from '@/components/PopularSideList.vue'
-import { useAuth } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import { PlusCircleIcon } from 'lucide-vue-next'
 import { ref } from 'vue'
 
-const auth = useAuth()
+const auth = useAuthStore()
 
 const selectedSides = ref<SideType>(sideType.JOINED)
 </script>

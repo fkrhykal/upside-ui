@@ -23,7 +23,7 @@ const createPostForm = useForm(
     onSuccess: async () => {
       isOpen.value = false
       createPostForm.reset()
-      queryClient.reset(['latestPost', 'subscribedPosts'])
+      queryClient.refetch(['latestPost', 'subscribedPosts'])
     },
   },
 )

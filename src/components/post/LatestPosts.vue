@@ -1,27 +1,39 @@
 <script setup lang="ts">
+import type { Post } from '@/handler/post'
 import { getLatestPostsHandler } from '@/handler/post/latest-posts'
 import { useQuery } from '@/hooks/useQuery'
+import { useAuthStore } from '@/stores/auth'
 import { Loader2Icon } from 'lucide-vue-next'
 import { reactive } from 'vue'
 import WatchPosition from '../WatchPosition.vue'
 import PostList from './PostList.vue'
 
-const params = reactive<{ limit: number; cursor: undefined | string }>({
-  limit: 5,
-  cursor: undefined,
+const params = reactive<{ limit: number; cursor: null | string }>({
+  limit: 10,
+  cursor: null,
 })
 
-const { data, previousData, isLoading } = useQuery({
-  queryKey: 'subscribedPosts',
-  queryFn: getLatestPostsHandler,
-  queryParams: params,
-  keepPreviousData: true,
+const posts = reactive<Post[]>([])
+const auth = useAuthStore()
+
+const { data, isLoading } = useQuery({
+  queryKey: 'latestPost',
+  queryFn: getLatestPostsHandler(auth.credential),
+  reactiveArgs: params,
+  onSuccess: (result) => {
+    posts.push(...result.data.posts)
+  },
+  onReset: (result) => {
+    if (posts[0].id === result.data.posts[1].id) {
+      posts.unshift(result.data.posts[0])
+    }
+  },
 })
 </script>
 
 <template>
   <div>
-    <PostList :posts="data.posts" v-for="data in previousData" class="mb-2" />
+    <PostList :posts="posts" class="mb-2" />
     <WatchPosition
       v-if="data?.metadata.next"
       :y="600"

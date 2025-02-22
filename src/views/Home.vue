@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Layout from '@/components/layout/Layout.vue'
 import SelectedPosts from '@/components/post/SelectedPosts.vue'
-import { useAuth } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 
-const auth = useAuth()
+const auth = useAuthStore()
 </script>
 
 <template>

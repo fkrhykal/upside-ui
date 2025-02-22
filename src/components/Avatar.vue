@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { User } from '@/helpers/credential'
 import { useClickOutside } from '@/hooks/useClickOutside'
-import { useAuth } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import { ref, useTemplateRef } from 'vue'
 import Alert from './Alert.vue'
 
 const props = defineProps<{ user: User }>()
-const auth = useAuth()
+const auth = useAuthStore()
 const isOpen = ref(false)
 
 const avatar = useTemplateRef<HTMLDivElement>('avatarRef')

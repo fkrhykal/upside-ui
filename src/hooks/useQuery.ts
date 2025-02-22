@@ -1,7 +1,7 @@
 import type { Handler, HasCode } from '@/handler/types'
 import type { QueryKey } from '@/helpers/query'
 import { useQueryStore } from '@/stores/query'
-import { computed, onMounted, reactive, ref, toRef, watch, type Reactive, type Ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 
 export type Query<D> = {
   data: Ref<D | undefined>
@@ -12,62 +12,68 @@ export type QueryData<D> = { data: D } & HasCode
 export type QueryError<E> = { error: E } & HasCode
 
 export type QueryOptions<T, D, E> = {
-  queryParams: Reactive<T>
   queryKey: QueryKey
-  keepPreviousData?: boolean
-  queryFn: Handler<Reactive<T>, QueryData<D>, QueryError<E>>
+  queryFn: Handler<T, QueryData<D>, QueryError<E>>
   onSuccess?: (success: QueryData<D>) => void | Promise<void>
   onFailure?: (failure: QueryError<E>) => void | Promise<void>
-}
+  onReset?: (success: QueryData<D>) => void | Promise<void>
+} & (T extends void ? { reactiveArgs?: T } : { reactiveArgs: T })
+
 export type QueryClient = ReturnType<typeof useQueryClient>
 
-type ProcessQueryFn = () => Promise<void>
+type ProcessQueryFn<T> = (reset: boolean) => Promise<void>
 
 export function useQuery<T, D, E>(opt: QueryOptions<T, D, E>) {
   const queryStore = useQueryStore()
   const data = ref<D>()
+  const initialArgs = { ...opt.reactiveArgs }
   const isLoading = ref(false)
   const isSuccess = ref(false)
-  const previousData = reactive<D[]>([])
   const queryFn = computed(() => {
-    const processQueryFn = async () => {
+    const processQuery = async (reset: boolean, args?: T) => {
       isLoading.value = true
-      const result = await opt.queryFn(opt.queryParams)
+      const result = await opt.queryFn(args as T)
       if (result.success) {
         data.value = result.data
         isSuccess.value = true
         if (opt.onSuccess) {
-          opt.onSuccess(result)
+          await opt.onSuccess(result)
         }
-        if (opt.keepPreviousData) {
-          previousData.push(toRef(result.data).value)
+        if (reset && opt.onReset) {
+          await opt.onReset(result)
         }
+        return
       }
       isLoading.value = false
       if (opt.onFailure) {
-        opt.onFailure(result as QueryError<E>)
+        await opt.onFailure(result as QueryError<E>)
       }
     }
-    return processQueryFn satisfies ProcessQueryFn
+    return processQuery
   })
-
-  queryStore.set(opt.queryKey, queryFn)
-  watch(opt.queryParams, queryFn.value)
-  onMounted(queryFn.value)
-  return { data, isLoading, isSuccess, queryParams: opt.queryParams, previousData }
+  if (opt.reactiveArgs) {
+    watch(opt.reactiveArgs, async () => await queryFn.value(false, opt.reactiveArgs))
+  }
+  onMounted(async () => {
+    queryStore.set(opt.queryKey, (reset: boolean) => queryFn.value(reset, opt.reactiveArgs))
+    await queryFn.value(false, opt.reactiveArgs)
+  })
+  onUnmounted(() => {
+    queryStore.delete(opt.queryKey)
+  })
+  return { data, isLoading, isSuccess }
 }
 
 export function useQueryClient() {
   const queryStore = useQueryStore()
 
-  const reset = async (keys: QueryKey[]) => {
+  const refetch = async <T extends {}>(keys: QueryKey[]) => {
     for (const key of keys) {
-      const handler = queryStore.get<Ref<ProcessQueryFn>>(key)
-      if (handler?.value) {
-        await handler.value()
+      const handler = queryStore.get<ProcessQueryFn<T>>(key)
+      if (handler) {
+        await handler(true)
       }
     }
   }
-
-  return { reset, queryStore }
+  return { refetch, queryStore }
 }

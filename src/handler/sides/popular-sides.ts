@@ -1,7 +1,7 @@
 import type { Credential } from '@/helpers/credential'
 import type { Data, Error, Handler, OffsetMetadata } from '../types'
 
-type Side = {
+export type Side = {
   id: string
   nick: string
   name: string
@@ -26,6 +26,7 @@ export const getPopularSideHandler: (
     headers['Authorization'] = 'Bearer ' + credential.token
   }
   const response = await fetch(url, {
+    method: 'GET',
     headers,
   })
 

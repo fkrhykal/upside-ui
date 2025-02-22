@@ -1,28 +1,43 @@
 <script setup lang="ts">
+import type { Post } from '@/handler/post'
 import { getSubscribedPostsHandler } from '@/handler/post/subscribed-posts'
 import type { Credential } from '@/helpers/credential'
 import { useQuery } from '@/hooks/useQuery'
+import { Loader2Icon } from 'lucide-vue-next'
 import { reactive } from 'vue'
+import WatchPosition from '../WatchPosition.vue'
 import PostList from './PostList.vue'
 
 const props = defineProps<{ credential: Credential }>()
-const params = reactive<{ limit: number; cursor?: string }>({ limit: 5, cursor: undefined })
+const args = reactive<{ limit: number; cursor?: string | null; credential: Credential }>({
+  limit: 5,
+  cursor: undefined,
+  credential: props.credential,
+})
+const posts = reactive<Post[]>([])
 
-const { data, previousData, isLoading } = useQuery({
+const { data, isLoading } = useQuery({
   queryKey: 'subscribedPosts',
-  queryFn: getSubscribedPostsHandler(props.credential),
-  queryParams: params,
-  keepPreviousData: true,
+  queryFn: getSubscribedPostsHandler,
+  reactiveArgs: args,
+  onSuccess: (result) => {
+    posts.push(...result.data.posts)
+  },
+  onReset: (result) => {
+    result.data.posts.forEach((post, i) => {
+      posts[i] = post
+    })
+  },
 })
 </script>
 
 <template>
   <div>
-    <PostList :posts="data.posts" v-for="data in previousData" class="mb-2" />
+    <PostList :posts="posts" class="mb-2" />
     <WatchPosition
       v-if="data?.metadata.next"
       :y="600"
-      @visible="params.cursor = data.metadata.next"
+      @visible="args.cursor = data.metadata.next"
       class="grid place-items-center"
     >
       <Loader2Icon v-if="isLoading" class="animate-spin" />

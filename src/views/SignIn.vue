@@ -5,12 +5,12 @@ import Input from '@/components/Input.vue'
 import Toast from '@/components/Toast.vue'
 import { status } from '@/handler/types'
 import { useToast } from '@/hooks/useToast'
-import { useAuth } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import { Loader2Icon } from 'lucide-vue-next'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const auth = useAuth()
+const auth = useAuthStore()
 const router = useRouter()
 const toast = useToast()
 

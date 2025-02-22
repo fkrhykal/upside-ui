@@ -13,5 +13,8 @@ export const useQueryStore = defineStore('query', {
     get<T>(key: string): T | undefined {
       return this.registry.get(key)
     },
+    delete(key: string) {
+      this.registry.delete(key)
+    },
   },
 })

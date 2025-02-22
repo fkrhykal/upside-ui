@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Button from '@/components/Button.vue'
 import UpsideIcon from '@/icons/UpsideIcon.vue'
-import { useAuth } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import Avatar from './Avatar.vue'
 
-const auth = useAuth()
+const auth = useAuthStore()
 </script>
 
 <template>
